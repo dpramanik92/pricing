@@ -93,22 +93,23 @@ if __name__ == "__main__":
     K = 1000  # Strike price
     r = 0.05  # Risk-free rate
     # Parameters
-    S0 = 1000  # Initial stock price
+    S0 = 900  # Initial stock price
     mu = 0.05  # Drift (expected return)
     sigma = 0.2  # Volatility
     T = 1 # Time to maturity (1 years)
-    Nsteps = 1000  # Number of time steps
+    Nsteps = 200  # Number of time steps
     Npaths = 20000  # Number of simulated paths
     K_values = np.arange(400, 2000, 50)  # Range of strike prices for plotting
 
 
     # Simulate GBM paths
-    t, S = simulate_gbm_paths(S0, mu, sigma, T, Nsteps, Npaths)
+    t, S = simulate_gbm_paths(S0, r, sigma, T, Nsteps, Npaths)
 
 
 
     # Price the European call option using Monte Carlo simulation
     # plot_strike_vs_option_price(S, K_values, r, T)
+
     option_price = price_european_option(S, K, r, T, option_type='call')
 
     print(f"Estimated European Call Option Price: {option_price:.2f}")
