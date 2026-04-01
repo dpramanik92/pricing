@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import norm
+import datetime
 
 # Simulation of GBM paths
 def simulate_gbm_paths(S0, mu, sigma,dt,Nsteps, Npaths):
@@ -105,6 +106,7 @@ if __name__ == "__main__":
     # Simulate GBM paths
     t, S = simulate_gbm_paths(S0, r, sigma, T, Nsteps, Npaths)
 
+    date1 = datetime.datetime(2024, 1, 1)
 
 
     # Price the European call option using Monte Carlo simulation

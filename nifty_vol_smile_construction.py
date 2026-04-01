@@ -8,7 +8,7 @@ import os
 from extract_option_chain import get_option_data
 # Load the option data from the NSE option chain CSV
 option_data = get_option_data(
-    'inputs/option-chain-ED-NIFTY-13-Apr-2026.csv',
+    'inputs/option-chain-ED-NIFTY-07-Apr-2026.csv',
     strikes=[22000, 22400, 22800, 23200, 23400, 23800, 24000, 24200]  
 )
 print(option_data)
@@ -86,7 +86,7 @@ spot_index = 22689
 test_rate = 0.1
 test_yield = 0.0132
 current_date = datetime(2026, 4, 1)
-maturity_date = datetime(2026, 4, 13)
+maturity_date = datetime(2026, 4, 7)
 days_to_maturity = (maturity_date - current_date).days
 T = days_to_maturity / 365.0
 F = spot_index * np.exp((test_rate - test_yield) * T)
