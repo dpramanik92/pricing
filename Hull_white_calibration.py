@@ -40,9 +40,9 @@ T = np.arange(0.1, 30.0, 0.1)  # Time to maturity from 0.1 to 30 years in steps 
 interpolated_yields = [interpolate(t, variable='Yield') for t in T]
 interpolated_discount_factors = [interpolate(t, variable='P(0,T)') for t in T]
 
-def compute_instantaneous_forward_rate(T):
-    log_P_T = interpolate(T, variable='log_P(0,T)')
-    log_P_T_plus_del = interpolate(T + 0.1, variable='log_P(0,T)')
+def compute_instantaneous_forward_rate(T,method='cubic'):
+    log_P_T = interpolate(T, variable='log_P(0,T)',method=method)
+    log_P_T_plus_del = interpolate(T + 0.1, variable='log_P(0,T)',method=method)
     forward_rate = -1/0.1 * (log_P_T_plus_del - log_P_T)
     return forward_rate
 
@@ -122,3 +122,29 @@ theta_values = [hull_white_theta(t, a, sigma) for t in T]
 
 ###### Calibrate the Hull-White model parameters to fit the Swaption Volatility Surface
 
+# Compare interpolation methods for instantaneous forward rates and yields
+T = np.arange(0.1, 30.0, 0.1)
+
+# Compute forward rates and yields for both linear and cubic interpolation
+linear_forward_rates = [compute_instantaneous_forward_rate(t,'linear')*100 for t in T]
+cubic_forward_rates = [compute_instantaneous_forward_rate(t)*100 for t in T]
+
+linear_yields = [interpolate(t, variable='Yield', method='linear') for t in T]
+cubic_yields = [interpolate(t, variable='Yield', method='cubic') for t in T]
+
+# Plot the results
+plt.figure(figsize=(10, 6))
+
+# Plot yields, linear interpolated forward rates, and cubic spline forward rates
+plt.plot(T, linear_yields, label='Yields (Linear Interpolation)', color='blue')
+plt.plot(T, linear_forward_rates, label='Forward Rates (Linear Interpolation)', color='green')
+plt.plot(T, cubic_forward_rates, label='Forward Rates (Cubic Spline Interpolation)', color='orange')
+
+plt.title('Yields and Forward Rates Interpolation')
+plt.xlabel('Time to Maturity (Years)')
+plt.ylabel('Rate (%)')
+plt.legend()
+plt.grid()
+
+plt.tight_layout()
+plt.show()
