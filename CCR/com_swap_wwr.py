@@ -1,9 +1,12 @@
+
+# Import necessary libraries
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 import pandas as pd
 import math
 
+# Define matplotlib parameters for better visualization
 plt.rcParams['figure.figsize'] = (10, 6)
 plt.rcParams['axes.titlesize'] = 16
 plt.rcParams['axes.labelsize'] = 14
@@ -24,7 +27,7 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(
 )
 
 
-# get the stock vector at time s
+# Function to compute the swap value at time s 
 def compute_swap_value(S,F_t,P_t,F,s):
     day_s = math.ceil(s*20)
     idx  = math.ceil(s)
@@ -35,10 +38,12 @@ def compute_swap_value(S,F_t,P_t,F,s):
         swap_value = np.zeros(S_idx.shape)
     return swap_value
 
+# Read the data from the file about the commodity swap
 data = pd.read_excel("../inputs/commodity_swap.xlsx", sheet_name="Sheet1")
 data['Time'] = data['Time']/360
 
-
+# Function to generate simulation data for the commodity price and the credit factor,
+# using Cholesky decomposition to introduce correlation between the two processes
 
 def generate_simulation_data(T, N, M, rho, sigma, sigma2, r, X_init, data):
     F = np.dot(data['F(0, Ti)'], data['P(0,Ti)']) / np.sum(data['P(0,Ti)'])
@@ -69,15 +74,7 @@ def generate_simulation_data(T, N, M, rho, sigma, sigma2, r, X_init, data):
     return F, P_t, F_t, S, X
 
 
-T = 1.0
-N = 240
-M = 50000
-rho = 0.0
-sigma = 0.2
-sigma2 = 0.15
-r = 0.02
-R = 0.4
-X_init = 0.1
+# Function to calculate the CVA series for the commodity swap with WWR, using the simulated data
 
 def calculate_cva_series(T, N, M, rho, sigma, sigma2, r, R, X_init, data):
     # Simulate data
@@ -97,6 +94,18 @@ def calculate_cva_series(T, N, M, rho, sigma, sigma2, r, R, X_init, data):
 
     return t_grid, cva_corr
 
+# Sample set of parameters for the commodity swap and the simulation
+T = 1.0
+N = 240
+M = 50000
+rho = 0.0
+sigma = 0.2
+sigma2 = 0.15
+r = 0.02
+R = 0.4
+X_init = 0.1
+
+
 # Example usage
 t_grid, cva_corr = calculate_cva_series(T, N, M, 0.1, sigma, sigma2, r,R, X_init, data)
 t_grid, cva_corr2 = calculate_cva_series(T, N, M, 0.3, sigma, sigma2, r,R, X_init, data)
@@ -111,6 +120,7 @@ cva_05_tot = np.sum(cva_corr4)
 rho = [0.1, 0.3, 0.5, 0.8]
 cva_tot = [cva_0_tot, cva_01_tot, cva_03_tot, cva_05_tot]
     
+# Final Plotting of the CVA series for different correlation values and the total CVA vs correlation    
 fig,ax = plt.subplots(1,2,figsize=(20,7))
 fig.suptitle('CVA of the Commodity Swap with WWR',fontsize=30)
 ax[0].plot(t_grid,cva_corr,label='CVA, corr = 0.1')
