@@ -129,7 +129,7 @@ ax[0].plot(t_grid,cva_corr3,label='CVA, corr = 0.5')
 ax[0].plot(t_grid,cva_corr4,label='CVA, corr = 0.8')
 
 ax[0].set_title('CVA of the Swap with WWR')
-ax[0].set_xlabel('Time (Years)')
+ax[0].set_xlabel('Time (Months)')
 ax[0].set_ylabel('CVA')
 # ax.grid()
 ax[0].legend()
